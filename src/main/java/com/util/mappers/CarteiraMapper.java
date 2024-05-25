@@ -24,5 +24,8 @@ public class CarteiraMapper {
         return carteiraRecords;
     }
 
-
+    public static Carteira convertCarteira(CarteiraRecord carteiraRecord){
+        Carteira carteira = new Carteira(carteiraRecord.numeroConta());
+        return carteira;
+    }
 }

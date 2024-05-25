@@ -3,6 +3,7 @@ package com.exchangeManager.carteira.controller;
 import com.exchangeManager.carteira.model.dto.CarteiraRecord;
 import com.exchangeManager.carteira.model.form.CarteiraForm;
 import com.exchangeManager.carteira.model.service.CarteiraService;
+import com.util.exception.InvestidorAlreadyExistsException;
 import com.util.exception.NoSuchRecordException;
 import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,11 @@ public class CarteiraController {
     @Autowired
     private CarteiraService carteiraService;
 
-    @GetMapping("/all")
+    @GetMapping("/todas")
     public ResponseEntity<List<CarteiraRecord>> getAll() {
         ResponseEntity<List<CarteiraRecord>> response = null;
         try {
-            List<CarteiraRecord> carteiraRecords = carteiraService.findAll();
+            List<CarteiraRecord> carteiraRecords = carteiraService.buscarTodasAsCarteiras();
             response = ResponseEntity.ok(carteiraRecords);
 
         }catch (NoSuchRecordException noSuchRecordException){
@@ -54,7 +55,7 @@ public class CarteiraController {
 
     }
 
-    @PostMapping("/atualizaCarteira")
+    @PutMapping("/atualizaCarteira")
     public ResponseEntity<CarteiraRecord> atualizaCarteira(@RequestBody CarteiraForm carteiraForm){
 
         ResponseEntity<CarteiraRecord> response = null;
@@ -74,12 +75,12 @@ public class CarteiraController {
 
     }
 
-    @GetMapping("/buscaPorNumeroConta/{numeroConta}")
-    public ResponseEntity<CarteiraRecord> buscaPorNumeroConta(@PathParam("numeroConta") String numeroConta) {
+    @GetMapping("/buscaPorNumeroConta")
+    public ResponseEntity<CarteiraRecord> buscaPorNumeroConta(@PathParam("conta") String conta) {
 
         ResponseEntity<CarteiraRecord> response = null;
         try{
-            CarteiraRecord carteiraRecord = carteiraService.buscaPorNumeroConta(numeroConta);
+            CarteiraRecord carteiraRecord = carteiraService.buscaPorNumeroConta(conta);
             response = ResponseEntity.ok(carteiraRecord);
         }catch (NoSuchRecordException noSuchRecordException){
             response = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -90,7 +91,7 @@ public class CarteiraController {
     }
 
     @DeleteMapping("/delete/{numeroConta}")
-    public ResponseEntity<CarteiraRecord> deleteInvestidor(@PathParam("numeroConta")@Valid String numeroConta) throws Exception {
+    public ResponseEntity<CarteiraRecord> deleteCarteira(@PathVariable("numeroConta")@Valid String numeroConta) throws Exception {
 
         ResponseEntity<CarteiraRecord> response = null;
         try {
@@ -98,9 +99,14 @@ public class CarteiraController {
             response = ResponseEntity.status(HttpStatus.ACCEPTED).body(carteiraRecord);
 
         } catch (NoSuchRecordException noSuchRecordException) {
+            log.error("Não existe nenhuma carteira com este número de conta");
             response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception exception) {
+        } catch (InvestidorAlreadyExistsException exception) {
+            log.error("Não foi deletada a carteira solicitada com numero de conta: "+numeroConta);
             response = ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        } catch (Exception e){
+            log.error("Erro: "+e.getMessage());
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
         return response;

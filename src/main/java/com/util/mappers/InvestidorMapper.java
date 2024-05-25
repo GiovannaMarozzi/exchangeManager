@@ -48,6 +48,9 @@ public class InvestidorMapper {
     }
 
     public static InvestidorRecordI converterComCarteira(Investidor investidor) {
+        if (investidor.getCarteira() == null)
+            return converterSemCarteira(investidor);
+
         InvestidorCarteiraRecord investidorCarteiraRecord = new InvestidorCarteiraRecord(
                 investidor.getNome()
                 , DocumentoMapper.convert(investidor.getDocumentos())

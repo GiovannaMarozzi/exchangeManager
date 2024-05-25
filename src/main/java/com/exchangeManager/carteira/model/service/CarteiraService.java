@@ -4,6 +4,9 @@ import com.exchangeManager.carteira.model.dto.CarteiraRecord;
 import com.exchangeManager.carteira.model.entity.Carteira;
 import com.exchangeManager.carteira.model.form.CarteiraForm;
 import com.exchangeManager.carteira.model.repository.CarteiraRepository;
+import com.exchangeManager.investidor.model.entity.Investidor;
+import com.exchangeManager.investidor.model.repository.InvestidorRepository;
+import com.util.exception.InvestidorAlreadyExistsException;
 import com.util.exception.NoSuchRecordException;
 import com.util.mappers.CarteiraMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +22,10 @@ public class CarteiraService {
     @Autowired
     CarteiraRepository carteiraRepository;
 
-    public List<CarteiraRecord> findAll() throws NoSuchRecordException {
+    @Autowired
+    InvestidorRepository investidorRepository;
+
+    public List<CarteiraRecord> buscarTodasAsCarteiras() throws NoSuchRecordException {
         List<CarteiraRecord> carteiraRecords = null;
         List<Carteira> carteiras = carteiraRepository.findAll();
         if (carteiras == null || carteiras.isEmpty())
@@ -57,14 +63,28 @@ public class CarteiraService {
             throw new NoSuchRecordException(carteiraRecord);
     }
 
-    public CarteiraRecord deletaCarteira(String numeroConta) throws NoSuchRecordException {
+    public CarteiraRecord deletaCarteira(String numeroConta) throws NoSuchRecordException, InvestidorAlreadyExistsException {
         CarteiraRecord carteiraRecord = null;
         carteiraRecord = carteiraRepository.findByNumeroConta(numeroConta);
-        if (carteiraRecord != null) {
-            carteiraRecord = carteiraRepository.deleteByNumeroConta(numeroConta);
-            return carteiraRecord;
-        } else
-            throw new NoSuchRecordException(carteiraRecord);
+        Investidor investidor = investidorRepository.findByCarteira_NumeroConta(numeroConta);
+
+        if (carteiraRecord == null){
+            log.error("Erro ao deletar carteira");
+            throw new NoSuchRecordException("Erro ao deletar carteira");
+        }else {
+            Carteira carteira = CarteiraMapper.convertCarteira(carteiraRecord);
+            if (investidor != null){
+                investidor.setCarteira(null);
+                investidorRepository.save(investidor);
+                carteiraRepository.delete(carteira);
+                log.info("carteira deletada: " + carteira);
+                return carteiraRecord;
+            }else {
+                carteiraRepository.delete(carteira);
+                log.info("carteira deletada: " + carteira);
+                return carteiraRecord;
+            }
+        }
     }
 
 }

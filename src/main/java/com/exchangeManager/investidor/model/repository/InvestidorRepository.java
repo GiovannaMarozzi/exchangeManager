@@ -18,4 +18,6 @@ public interface InvestidorRepository extends JpaRepository<Investidor, Long> {
     List<Investidor> findAllSemCarteira();
 
     Investidor findByDocumentos_NumeroDocumento(Long numeroDocumento);
+
+    Investidor findByCarteira_NumeroConta(String numeroConta);
 }
