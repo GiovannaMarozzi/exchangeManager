@@ -75,8 +75,8 @@ public class CarteiraController {
 
     }
 
-    @GetMapping("/buscaPorNumeroConta")
-    public ResponseEntity<CarteiraRecord> buscaPorNumeroConta(@PathParam("conta") String conta) {
+    @GetMapping("/buscaPorNumeroConta/{conta}")
+    public ResponseEntity<CarteiraRecord> buscaPorNumeroConta(@PathVariable("conta") String conta) {
 
         ResponseEntity<CarteiraRecord> response = null;
         try{
@@ -91,7 +91,7 @@ public class CarteiraController {
     }
 
     @DeleteMapping("/delete/{numeroConta}")
-    public ResponseEntity<CarteiraRecord> deleteCarteira(@PathVariable("numeroConta")@Valid String numeroConta) throws Exception {
+    public ResponseEntity<CarteiraRecord> deleteCarteira(@PathVariable("numeroConta") String numeroConta) throws Exception {
 
         ResponseEntity<CarteiraRecord> response = null;
         try {

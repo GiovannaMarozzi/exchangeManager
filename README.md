@@ -4,7 +4,7 @@
     <header>
         <div class="container">
             <h1>Exange Manager</h1>
-            <h2>Desenvolvimento de Software para Plataforma de Investimentos</h2>
+            <h2>Desenvolvimento de Software para Gestão de investimentos</h2>
         </div>
     </header>
     <div class="container">
@@ -16,15 +16,16 @@
                 <li>SOLID Principles</li>
                 <li>API Rest</li>
                 <li>Spring Boot</li>
-                <li>Banco de Dados H2</li>
+                <li>Banco de Dados H2 (persistente)</li>
                 <li>Swagger</li>
+                <li>JPA</li>
             </ul>
         </section>
         <section>
             <h3>Conexões com o Banco de Dados</h3>
             <ul>
                 <li><strong>URL do Banco de Dados</strong>: <a href="http://localhost:8080/h2-ui/">http://localhost:8080/h2-ui/</a></li>
-                <li><strong>Login</strong>: sa</li>
+                <li><strong>Login</strong>: dev</li>
                 <li><strong>Senha</strong>: (não possui)</li>
                 <li><strong>JDBC URL</strong>: <code>jdbc:h2:file:./src/main/resources/exchangeManager</code></li>
             </ul>
@@ -47,19 +48,19 @@
             <p>Este projeto foi desenvolvido conforme o case de Gerenciamento de Investimentos. Detalhes adicionais podem ser encontrados <a href="https://miro.com/welcomeonboard/MWxGZHdqbGFXWGxKUzgxRUxQc3UwT3U4MXNrRHpTcVpyQjVxcmczbE1tc1JpQ1lNYURuTHVXVkNUaU5uWGtuSnwzNDU4NzY0NTg0Nzg0NjQ3MDI3fDI=?share_link_id=985262556916">neste link</a>.</p>
         </section>
         <section>
-            <h2>Funcionalidades do CRUD</h2>
+            <h2>Endpoints API Rest</h2>
             <h3>Domínio de Carteira</h3>
             <ul>
                 <li><strong>Mapeamento do Controller</strong>: <code>api/v1/carteira</code></li>
             </ul>
             <p><strong>Criação de Nova Carteira (POST)</strong>: <code>/novaCarteira</code></p>
-            <p>Body: ---</p>
+            <p>Body: (não contém body)</p>
             <p><strong>Atualização de Carteira (PUT)</strong>: <code>/atualizaCarteira</code></p>
             <pre><code>{
   "numeroConta": "string"
 }</code></pre>
             <p><strong>Listar Todas as Carteiras (GET)</strong>: <code>/todas</code></p>
-            <p><strong>Buscar Carteira por Número de Conta (GET)</strong>: <code>/buscaPorNumeroConta?conta={NUMERO_CONTA}</code></p>
+            <p><strong>Buscar Carteira por Número de Conta (GET)</strong>: <code>/buscaPorNumeroConta/{NUMERO_CONTA}</code></p>
             <p><strong>Deletar Carteira (DELETE)</strong>: <code>/delete?numeroConta={NUMERO_CONTA}</code></p>
           <hr>
             <h3>Domínio de Investidor</h3>
@@ -120,10 +121,11 @@
     "numeroConta": "string"
   }
 }</code></pre>
-            <p><strong>Buscar Investidor por Documento (GET)</strong>: <code>/documento?documento={NUMERO_DOCUMENTO}</code></p>
+            <p><strong>Buscar Investidor por Documento (GET)</strong>: <code>/documento/{NUMERO_DOCUMENTO}</code></p>
             <p><strong>Listar Todos os Investidores (GET)</strong>: <code>/busca</code></p>
             <p><strong>Deletar Investidor (DELETE)</strong>: <code>/delete/{numeroDocumento}</code></p>
         </section>
     </div>
+<hr>
 </body>
 </html>

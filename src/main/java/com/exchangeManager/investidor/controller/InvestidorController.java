@@ -55,8 +55,8 @@ public class InvestidorController {
         return response;
     }
 
-    @GetMapping("/documento")
-    public ResponseEntity buscaPorDocumento(@RequestParam Long documento) throws Exception {
+    @GetMapping("/documento/{documento}")
+    public ResponseEntity buscaPorDocumento(@PathVariable("documento") Long documento) throws Exception {
         ResponseEntity response = null;
 
         try {
